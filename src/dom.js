@@ -1,0 +1,1 @@
+import SimplePicker from 'simplepicker'
