@@ -4,9 +4,38 @@
         <title>To-Do List</title>
     </head>
     <body> 
-        <header>
-        </header>
         <section id="content">
+            <header>
+                <div id="date-container">
+                    <div id="day"><p>Day</p></div>
+                    <div id="week"><p>Week</p></div>
+                    <div id="month"><p>Month</p></div>
+                    <div id="year"><p>Year</p></div>
+                </div>
+            </header>
+            <span id="previous">< </span>
+            <div id="calendar-container">
+                <p id="date-info-1">Sunday</p>
+                <p id="date-info-2">Jan 10, 2021</p>
+            </div>
+            <span id="next"> ></span>
+            <div id="form-container">
+                <form>
+                    <input type="text" name="new-todo" placeholder="Add a task...">
+                </form>
+            </div>
+            <div id="todos-container">
+                <div id="pinned-todos">
+                    <ul>
+                        <li><span class="checkbox"></span>Clean garbage<span class="menu">...</span><p class="memo">For some reason in my footer there's a space to the left of my ul so it isn't lined up with the content above it (membership text etc) If I were to put text outside this ul (but still within the footer wrapper) there is no such space.</p></li>
+                    </ul>
+                </div>
+                <ul>
+                    <li><span class="checkbox"></span>Clean garbage</li>
+                    <li><span class="checkbox"></span>Clean garbage</li>
+                    <li><span class="checkbox"></span>Did Trump himself order the National Guard to clear out protesters (who sided with him) on the Capitol on Jan 6?</li>
+                </ul>
+            </div>
         </section>
         <script src="main.js" type="module"></script>
     </body>
