@@ -4,6 +4,7 @@
         <title>To-Do List</title>
     </head>
     <body> 
+        
         <section id="content">
             <header>
                 <div id="date-container">
@@ -15,25 +16,25 @@
             </header>
             <span id="previous">< </span>
             <div id="calendar-container">
-                <p id="date-info-1">Sunday</p>
-                <p id="date-info-2">Jan 10, 2021</p>
+                <p id="date-info-1"></p>
+                <p id="date-info-2"></p>
             </div>
             <span id="next"> ></span>
-            <div id="form-container">
-                <form>
-                    <input type="text" name="new-todo" placeholder="Add a task...">
+            <div>
+                <form id='form-data' autocomplete="off">
+                    <input id="input-field"type="text" name="new-todo" placeholder="Add a task...">
+                    <button id="add-btn" type="submit">+</button>
                 </form>
             </div>
+            <p id="no-task-message">Your todo-list is empty</p>
             <div id="todos-container">
                 <div id="pinned-todos">
                     <ul>
-                        <li><span class="checkbox"></span>Clean garbage<span class="menu">...</span><p class="memo">For some reason in my footer there's a space to the left of my ul so it isn't lined up with the content above it (membership text etc) If I were to put text outside this ul (but still within the footer wrapper) there is no such space.</p></li>
+                    
                     </ul>
                 </div>
                 <ul>
-                    <li><span class="checkbox"></span>Clean garbage</li>
-                    <li><span class="checkbox"></span>Clean garbage</li>
-                    <li><span class="checkbox"></span>Did Trump himself order the National Guard to clear out protesters (who sided with him) on the Capitol on Jan 6?</li>
+
                 </ul>
             </div>
         </section>
