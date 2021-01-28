@@ -12,6 +12,7 @@ const toDayView = (()=> {
     function displayDate() {
         // Underline the menu item
         document.getElementById('day').style.borderBottom = '3px solid rgb(213, 101, 138)';
+        document.getElementById('day').setAttribute('class', 'current-page');
 
         // Attach events
         nextDay();

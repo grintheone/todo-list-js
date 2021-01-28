@@ -1,21 +1,70 @@
-import {todo, todos} from './logic.js'
+import {Todo, storage } from './logic.js'
 
 const domInterations = (() => {
+    let counter = 0;
+    let activePage = ''
+
+    setTimeout(()=> {
+        activePage = document.querySelector('.current-page').id;
+        const currentPageTodos = storage.getFromLocalStorage(activePage, storage.getDate())
+        if (currentPageTodos != undefined) {
+            for (let i = 0; i < currentPageTodos.length; i++) {
+            
+                createDomElement(currentPageTodos[i]);
+                updateTodoDom(currentPageTodos[i])
+                counter++;
+            }   
+        }
+        isTodoListEmpty(); 
+    }, 100);
+
     // display the results of the form input
     const form = document.getElementById('form-data');
     form.addEventListener('submit', (event)=> {
-        const newTodo = todo(event.target.firstElementChild.value)
-        todos.push(newTodo);
-        domInterations.createDomElement(newTodo.getTitle());
+        const newTodo = Todo(event.target.firstElementChild.value, storage.getDate(), counter)
+        storage.storeTodo(activePage, storage.getDate(), newTodo)
+        counter++;
+        domInterations.createDomElement(newTodo);
+        isTodoListEmpty();
         event.target.firstElementChild.value = '';
         event.preventDefault();
     });
+
+    
+    // Update dom info if todo has been pinned, marked as fished or has memo
+    function updateTodoDom(todo) {
+        const t = todo.getFullInfo();
+        const todoDom = document.getElementById(todo.getId());
+        // Check if pinned
+        if (t.priority == true) {
+            const pinned = document.querySelector('#pinned-todos > ul:nth-child(1)');
+            pinned.parentNode.style.display = 'block';
+            todoDom.childNodes[3].lastChild.firstChild.textContent = 'Unpin the task';
+            pinned.prepend(todoDom);
+        }
+        // Check if has memo
+        if (t.description != '') {
+            const memo = document.createElement('p');
+            memo.setAttribute('class', 'memo')
+            memo.textContent = t.description;
+            todoDom.append(memo)
+        }
+        // Check if done
+        if (t.done == true) {
+            console.log(todoDom)
+            todoDom.classList.toggle('done');
+        }
+        
+    }
+
     // event function to mark finished todos
     function newEvent(ev) {
         if (ev.target.tagName === 'LI') {
             ev.target.classList.toggle('done');
+            storage.changeDone(activePage, storage.getDate(), ev.target.id)
         } else if (ev.target.classList[0] == 'checkbox') {
             ev.target.parentElement.classList.toggle('done');
+            storage.changeDone(activePage, storage.getDate(), ev.target.parentElement.id)
         }
     }
 
@@ -27,7 +76,7 @@ const domInterations = (() => {
             }
             const menu = ev.target;
             menu.nextElementSibling.setAttribute('id', 'opened');
-            isMemoExist(ev.target);
+            memoExists(ev.target);
         } else if (ev.target.className == 'menu-item-1' ||
                     ev.target.className == 'menu-item-2'||
                     ev.target.className == 'menu-item-3'||
@@ -49,12 +98,7 @@ const domInterations = (() => {
     }
 
     // create html elements for todo
-    function createDomElement(todoTitle) {
-        // Delete the empty todo-message
-        if (document.getElementById('no-task-message') != null) {
-            document.getElementById('no-task-message').remove()
-        }
-
+    function createDomElement(todo) {
         const todoList = document.querySelector('#todos-container > ul:nth-child(2)');
         const listElem = document.createElement('li');
         const checkbox = document.createElement('span');
@@ -62,7 +106,8 @@ const domInterations = (() => {
         menu.setAttribute('class', 'menu');
         menu.textContent = '...';
         checkbox.setAttribute('class', 'checkbox');
-        listElem.textContent = todoTitle;
+        listElem.textContent = todo.getTitle();
+        listElem.setAttribute('id', todo.getId());
 
         listElem.addEventListener('click', newEvent);
         document.addEventListener('click', openMenu);
@@ -115,7 +160,9 @@ const domInterations = (() => {
 
     // Menu functionality
     function deleteMenuItem(target) {
+        storage.deleteTodo(activePage, storage.getDate(), target.id)
         target.remove()
+        isTodoListEmpty();
     }
 
     function pinToTheTop(target) {
@@ -128,6 +175,7 @@ const domInterations = (() => {
             const pinned = document.querySelector('#pinned-todos > ul:nth-child(1)');
             pinned.prepend(item);
         }
+        storage.changePriority(activePage, storage.getDate(), item.id);
         document.getElementById('opened').removeAttribute('id');  
     }
 
@@ -149,6 +197,7 @@ const domInterations = (() => {
     }
 
     function addOrDeleteMemo(target) {
+        const elemId = target.parentNode.parentNode.parentNode.id
         if (target.textContent == 'Add a memo') {
             const form = document.createElement('form')
             form.autocomplete = 'off';
@@ -173,23 +222,36 @@ const domInterations = (() => {
                 const memo = document.createElement('p');
                 memo.setAttribute('class', 'memo')
                 memo.textContent = event.target.firstChild.value;
+                storage.changeDesription(activePage, storage.getDate(), elemId, memo.textContent);
                 event.target.parentNode.append(memo)
                 form.remove() 
             }
         } else {
+            storage.changeDesription(activePage, storage.getDate(), elemId, '');
             target.parentNode.parentNode.parentNode.lastChild.remove()
             document.getElementById('opened').removeAttribute('id');
         }
-          
     }
 
-    function isMemoExist(target) {
+    function memoExists(target) {
         if (target.className == 'menu') {
             if (target.parentNode.lastChild.className == 'memo') {
                 document.getElementById('opened').lastChild.childNodes[1].textContent = 'Delete memo';
             } else {
                 document.getElementById('opened').lastChild.childNodes[1].textContent = 'Add a memo';
             }
+        }
+    }
+
+    // Function to check whether there is a message saying about empty todo
+    function isTodoListEmpty() {
+        // Delete the empty todo-message
+        const pinnedTodos = document.querySelector('#pinned-todos > ul:nth-child(1)');
+        const unpinnedTodos = document.querySelector('#todos-container > ul:nth-child(2)');
+        if (pinnedTodos.firstElementChild == null && unpinnedTodos.firstElementChild == null) {
+            document.getElementById('no-task-message').style.display = 'block';
+        } else {
+            document.getElementById('no-task-message').style.display = 'none';
         }
     }
 
