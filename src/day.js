@@ -1,19 +1,15 @@
 import { format, compareAsc } from 'date-fns';
-import {domInterations} from './dom.js'
+import {domInteractions} from './dom.js'
 
 const toDayView = (()=> {
     let currentDay = new Date();
-
-    // Return current day
-    function getCurrentDay() {
-        return currentDay;
-    }
 
     function displayDate() {
         // Underline the menu item
         document.getElementById('day').style.borderBottom = '3px solid rgb(213, 101, 138)';
         document.getElementById('day').setAttribute('class', 'current-page');
-
+        
+        setDate(currentDay);
         // Attach events
         nextDay();
         previousDay();
@@ -28,11 +24,6 @@ const toDayView = (()=> {
                 setDate(currentDay);
             }
         };
-
-        const day = document.getElementById('date-info-1'); 
-        day.textContent = format(Date.now(), 'EEEE')
-        const month = document.getElementById('date-info-2');
-        month.textContent = format(Date.now(), 'LLL d, y');
     }
 
     function nextDay() {
@@ -55,10 +46,13 @@ const toDayView = (()=> {
         const day = document.getElementById('date-info-1'); 
         day.textContent = format(date, 'EEEE');
         const month = document.getElementById('date-info-2');
-        month.textContent = format(date, 'LLL') + " " + format(date, 'd') + ", " + format(date, 'y');
+        month.textContent = format(date, 'LLL d, y');
+        setTimeout(()=> {
+            domInteractions.runModule();
+        }, 100);
         }
 
-    return { displayDate, getCurrentDay }
+    return { displayDate }
 })();
 
 export {toDayView}

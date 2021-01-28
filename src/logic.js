@@ -101,7 +101,7 @@ const storage = (()=> {
         if (localStorage.getItem(anchor) != null) {
             const obj = JSON.parse(localStorage.getItem(anchor));
             const restoredArr = []
-            if (obj[date].length > 0) {
+            if (obj[date] != undefined) {
                 for (let i = 0; i < obj[date].length; i++) {
                     const todo = Todo(obj[date][i].title, obj[date][i].dueDate, obj[date][i].id)
                     if (obj[date][i].description != '') {

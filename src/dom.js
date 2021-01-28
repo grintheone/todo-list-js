@@ -1,22 +1,36 @@
 import {Todo, storage } from './logic.js'
 
-const domInterations = (() => {
+const domInteractions = (() => {
     let counter = 0;
     let activePage = ''
 
+
     setTimeout(()=> {
+        runModule();
+    }, 100);
+
+    function runModule() {
+        clearTheTodoArea();
+        counter = 0;
         activePage = document.querySelector('.current-page').id;
         const currentPageTodos = storage.getFromLocalStorage(activePage, storage.getDate())
         if (currentPageTodos != undefined) {
             for (let i = 0; i < currentPageTodos.length; i++) {
-            
                 createDomElement(currentPageTodos[i]);
                 updateTodoDom(currentPageTodos[i])
                 counter++;
             }   
         }
         isTodoListEmpty(); 
-    }, 100);
+    }
+
+    // Clear the page of todos while seitching between pages
+    function clearTheTodoArea() {
+        const unpinned = document.querySelector('#todos-container > ul:nth-child(2)');
+        const pinned = document.querySelector('#pinned-todos > ul:nth-child(1)');
+        unpinned.innerHTML = '';
+        pinned.innerHTML = '';
+    }
 
     // display the results of the form input
     const form = document.getElementById('form-data');
@@ -24,7 +38,7 @@ const domInterations = (() => {
         const newTodo = Todo(event.target.firstElementChild.value, storage.getDate(), counter)
         storage.storeTodo(activePage, storage.getDate(), newTodo)
         counter++;
-        domInterations.createDomElement(newTodo);
+        domInteractions.createDomElement(newTodo);
         isTodoListEmpty();
         event.target.firstElementChild.value = '';
         event.preventDefault();
@@ -181,7 +195,7 @@ const domInterations = (() => {
 
     function pinnedIsEmpty() {
         const pinned = document.querySelector('#pinned-todos > ul:nth-child(1)');
-        if (pinned.firstChild.firstChild != null) {
+        if (pinned.childNodes.length > 0) {
             pinned.parentNode.style = 'display: block';
         } else {
             pinned.parentNode.style = 'display: none';
@@ -256,11 +270,11 @@ const domInterations = (() => {
     }
 
     
-    return { createDomElement }
+    return { createDomElement, runModule }
 })();
 
 
 
-export {domInterations}
+export {domInteractions}
 
 
