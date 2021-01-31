@@ -16,11 +16,11 @@ body {
     background-color: rgb(223, 107, 145);
 }
 
+
 #content {
     position: absolute;
-    width: 50%;
-    min-width: 500px;
-    height: 70%;
+    width: 600px;
+    height: 80%;
     top: 50%;
     left: 50%;
     background-color: rgb(60, 66, 74);
@@ -43,6 +43,9 @@ body {
     padding: 0px 20px;
     transition: .2s;
 }
+#date-container div:hover {
+    cursor: pointer;
+}
 
 #calendar-container {
     position: absolute;
@@ -62,6 +65,7 @@ body {
 #date-info-2 {
     transition: .2s;
     font-size: 1.2rem;
+    color: rgb(160, 168, 175);
 }
 
 #next, #previous {
@@ -69,13 +73,24 @@ body {
     font-size: 2rem;
     position: absolute;
     top: 17%;
-    color: rgb(223, 232, 240);
+    transition: .5s;
+    color: rgb(93, 99, 109);
 }
 #previous {
-    left: 25%;
+    left: 30%;
 }
 #next {
-    right: 25%;
+    right: 30%;
+}
+#next:hover, #previous:hover {
+    cursor: pointer;
+    color: rgb(213, 101, 138);
+}
+
+.year-view {
+    font-size: 1.8rem!important;
+    position: relative;
+    top: 8px;
 }
 
 #input-field {
@@ -135,8 +150,6 @@ body {
     left: 50%;
     width: 80%;
     transform: translate(-50%, -50%);
-    
-    
 }
 
 #todos-container {
@@ -145,13 +158,23 @@ body {
     padding: 0 10px;
     overflow: scroll;
     overflow-x: hidden;
-    scrollbar-color: rgb(52, 58, 64) transparent;
+    scrollbar-color: rgb(52, 58, 64) transparent !important;
     font-size: 1.1rem;
     position: absolute;
     top: 35%;
     left: 50%;
     transform: translate(-50%);
 }
+
+#todos-container::-webkit-scrollbar-thumb {
+    background: rgb(52, 58, 64);
+    border-radius: 10px;
+}
+#todos-container::-webkit-scrollbar {
+    background: transparent;
+}
+
+    
 
 #pinned-todos ul, #todos-container ul {
     margin: 0;
@@ -166,7 +189,7 @@ body {
     content: '📌';
     font-size: 0.9rem;
     color: transparent;
-    text-shadow: 0 0 1px rgb(223, 232, 240);
+    text-shadow: 0 0 1px rgb(223, 107, 145);
 }
 
 #pinned-todos ul li {
@@ -210,7 +233,7 @@ li.done::before {
     border-width: 0 0.2em 0.2em 0;
     height: .5em;
     top: 21px;
-    left: -12px;
+    left: -13px;
     margin-top: -1em;
     transform: rotate(45deg);
     width: 0.2em;
@@ -218,7 +241,8 @@ li.done::before {
 
 .checkbox {
     position: absolute;
-    border: 1px solid rgb(96, 97, 99);
+    border: none;
+    box-shadow: inset 0 0 2px 0 black;
     border-radius: 2px;
     width: 21px;
     height: 21px;

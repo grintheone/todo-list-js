@@ -1,38 +1,31 @@
 import { format, compareAsc } from 'date-fns';
-import {appendToTheDom} from './dom.js'
+import setDay from 'date-fns/setDay'
+import {domInteractions} from './dom.js'
+
 
 const toWeekView = (()=> {
     let currentDay = new Date();
-    console.log(currentDay);
-
-    // Return current day
-    function getCurrentDay() {
-        return currentDay;
-    }
 
     function displayDate() {
         // Underline the menu item
         document.getElementById('week').style.borderBottom = '3px solid rgb(213, 101, 138)';
-
+        document.getElementById('week').setAttribute('class', 'current-page');
+        
+        setDate(currentDay);
         // Attach events
         nextDay();
         previousDay();
         document.onkeydown = function(e) {
             if (e.keyCode === 37) {
                 e.preventDefault();
-                currentDay.setDate(currentDay.getDate() - 1);
+                currentDay.setDate(currentDay.getDate() - 7);
                 setDate(currentDay);
             } else if (e.keyCode === 39) {
                 e.preventDefault();
-                currentDay.setDate(currentDay.getDate() + 1);
+                currentDay.setDate(currentDay.getDate() + 7);
                 setDate(currentDay);
             }
         };
-
-        const month = document.getElementById('date-info-1'); 
-        month.textContent = format(Date.now(), 'LLLL')
-        const week = document.getElementById('date-info-2');
-        week.textContent = format(Date.now(), 'wo') + " " + format(Date.now(), 'd') + ", " + format(Date.now(), 'y')
     }
 
     function nextDay() {
@@ -51,22 +44,19 @@ const toWeekView = (()=> {
         })
     }
 
-    function getWeek(shift=1) {
-        const first = currentDay.getDate() - currentDay.getDay() + shift;
-        const last = first + 6;
-        const monday = new Date(currentDay.setDate(first));
-        const sunday = new Date(currentDay.setDate(last));
-        return {monday, sunday}
-    }
-
     function setDate(date) {
-        const day = document.getElementById('date-info-1');
-        day.textContent = format(date, 'EEEE');
+        const sunday = setDay(date, 0, { weekStartsOn: 1 })
+        const monday = setDay(date, 1, { weekStartsOn: 1 })
+        const day = document.getElementById('date-info-1'); 
+        day.textContent = format(date, 'y');
         const month = document.getElementById('date-info-2');
-        month.textContent = format(date, 'LLL') + " " + format(date, 'd') + ", " + format(date, 'y');
+        month.textContent = format(monday, 'LLL d') + ' - ' + format(sunday, 'LLL d');
+        setTimeout(()=> {
+            domInteractions.runModule();
+        }, 100);
         }
-
-    return { displayDate, getCurrentDay }
+   
+    return { displayDate }
 })();
 
 export {toWeekView}

@@ -1,6 +1,7 @@
-import { format, compareAsc } from 'date-fns';
-import { de } from 'date-fns/locale';
-import {domInterations} from './dom.js'
+import { toDayView } from './day.js'
+import { toWeekView } from './week.js'
+import { toMonthView } from './month.js'
+import { toYearView } from './year.js'
 
 // Module to store and alter todos data
 const storage = (()=> {
@@ -12,7 +13,14 @@ const storage = (()=> {
     }
 
     function getDate() {
-        return document.getElementById('date-info-2').textContent
+        if (document.getElementById('date-info-2').textContent != '') {
+            const date = document.getElementById('date-info-1').textContent + ': ' + document.getElementById('date-info-2').textContent
+            return date
+        } else {
+            return document.getElementById('date-info-1').textContent
+        }
+        
+        
     }
 
     function storeTodo(anchor, date, todo) {
@@ -166,8 +174,39 @@ const Todo = function(title, dueDate, id) {
     return {getId, getTitle, setDescription, setPriority, getFullInfo, setDone}
 }
 
+// Tab switching login
+function checkCurrentPage() {
+    const elem = document.querySelector('.current-page');
+    const isYear = document.querySelector('.year-view');
+    if (elem != null) {
+        elem.style.borderBottom = 'none';
+        elem.removeAttribute('class', 'current-page');
+    }
+    if (isYear != null) {
+        isYear.removeAttribute('class', 'year-view');
+    }
+}
 
-
+function switchTab() {
+    document.getElementById('day').addEventListener('click', ()=> {
+        checkCurrentPage();
+        toDayView.displayDate();
+    })
+    document.getElementById('week').addEventListener('click', ()=> {
+        checkCurrentPage();
+        toWeekView.displayDate();
+    })
+    document.getElementById('month').addEventListener('click', ()=> {
+        checkCurrentPage();
+        toMonthView.displayDate();
+    })
+    document.getElementById('year').addEventListener('click', ()=> {
+        checkCurrentPage();
+        toYearView.displayDate();
+    })
+}
+toDayView.displayDate();
+switchTab();
 
 export {Todo, storage}
 

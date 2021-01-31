@@ -21,7 +21,8 @@ const domInteractions = (() => {
                 counter++;
             }   
         }
-        isTodoListEmpty(); 
+        isTodoListEmpty();
+        pinnedIsEmpty(); 
     }
 
     // Clear the page of todos while seitching between pages
@@ -35,12 +36,14 @@ const domInteractions = (() => {
     // display the results of the form input
     const form = document.getElementById('form-data');
     form.addEventListener('submit', (event)=> {
-        const newTodo = Todo(event.target.firstElementChild.value, storage.getDate(), counter)
-        storage.storeTodo(activePage, storage.getDate(), newTodo)
-        counter++;
-        domInteractions.createDomElement(newTodo);
-        isTodoListEmpty();
-        event.target.firstElementChild.value = '';
+        if (event.target.firstElementChild.value != '') {
+            const newTodo = Todo(event.target.firstElementChild.value, storage.getDate(), counter)
+            storage.storeTodo(activePage, storage.getDate(), newTodo)
+            counter++;
+            domInteractions.createDomElement(newTodo);
+            isTodoListEmpty();
+            event.target.firstElementChild.value = '';
+        }
         event.preventDefault();
     });
 
@@ -65,7 +68,6 @@ const domInteractions = (() => {
         }
         // Check if done
         if (t.done == true) {
-            console.log(todoDom)
             todoDom.classList.toggle('done');
         }
         
@@ -233,12 +235,15 @@ const domInteractions = (() => {
             document.getElementById('opened').removeAttribute('id');
             
             form.onsubmit = function addComment(event) {
-                const memo = document.createElement('p');
-                memo.setAttribute('class', 'memo')
-                memo.textContent = event.target.firstChild.value;
-                storage.changeDesription(activePage, storage.getDate(), elemId, memo.textContent);
-                event.target.parentNode.append(memo)
-                form.remove() 
+                if (event.target.firstElementChild.value != '') {
+                    const memo = document.createElement('p');
+                    memo.setAttribute('class', 'memo')
+                    memo.textContent = event.target.firstChild.value;
+                    storage.changeDesription(activePage, storage.getDate(), elemId, memo.textContent);
+                    event.target.parentNode.append(memo)
+                    form.remove() 
+                }
+                event.preventDefault();
             }
         } else {
             storage.changeDesription(activePage, storage.getDate(), elemId, '');
@@ -268,7 +273,6 @@ const domInteractions = (() => {
             document.getElementById('no-task-message').style.display = 'none';
         }
     }
-
     
     return { createDomElement, runModule }
 })();

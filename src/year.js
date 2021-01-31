@@ -2,52 +2,53 @@ import { format, compareAsc } from 'date-fns';
 import {domInteractions} from './dom.js'
 
 
-const toDayView = (()=> {
+const toYearView = (()=> {
     let currentDay = new Date();
 
     function displayDate() {
         // Underline the menu item
-        document.getElementById('day').style.borderBottom = '3px solid rgb(213, 101, 138)';
-        document.getElementById('day').setAttribute('class', 'current-page');
+        document.getElementById('year').style.borderBottom = '3px solid rgb(213, 101, 138)';
+        document.getElementById('year').setAttribute('class', 'current-page');
         
         setDate(currentDay);
         // Attach events
-        nextDay();
-        previousDay();
+        nextMonth();
+        previousMonth();
         document.onkeydown = function(e) {
             if (e.keyCode === 37) {
                 e.preventDefault();
-                currentDay.setDate(currentDay.getDate() - 1);
+                currentDay.setMonth(currentDay.getMonth() - 12);
                 setDate(currentDay);
             } else if (e.keyCode === 39) {
                 e.preventDefault();
-                currentDay.setDate(currentDay.getDate() + 1);
+                currentDay.setMonth(currentDay.getMonth() + 12);
                 setDate(currentDay);
             }
         };
     }
 
-    function nextDay() {
+    function nextMonth() {
         const nextBtn = document.getElementById('next');
         nextBtn.addEventListener('click', ()=> {
-            currentDay.setDate(currentDay.getDate() + 1);
+            currentDay.setMonth(currentDay.getMonth() + 12);
             setDate(currentDay);
         });
     }
 
-    function previousDay() {
+    function previousMonth() {
         const previousBtn = document.getElementById('previous');
         previousBtn.addEventListener('click', ()=> { 
-            currentDay.setDate(currentDay.getDate() - 1);
+            currentDay.setMonth(currentDay.getMonth() - 12);
             setDate(currentDay);
         })
     }
 
     function setDate(date) {
-        const day = document.getElementById('date-info-1'); 
-        day.textContent = format(date, 'EEEE');
+        const year = document.getElementById('date-info-1'); 
+        year.textContent = format(date, 'y');
+        year.setAttribute('class', 'year-view');
         const month = document.getElementById('date-info-2');
-        month.textContent = format(date, 'LLL d, y');
+        month.textContent = '';
         setTimeout(()=> {
             domInteractions.runModule();
         }, 100);
@@ -56,4 +57,4 @@ const toDayView = (()=> {
     return { displayDate }
 })();
 
-export {toDayView}
+export {toYearView}
